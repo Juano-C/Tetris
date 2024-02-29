@@ -99,7 +99,7 @@ public class FinishedGameWindow extends JFrame
 		JLabel lblNewLabel = new JLabel("");
 		lblNewLabel.setBounds(0, 0, 409, 217);
 		panel.add(lblNewLabel);
-		lblNewLabel.setIcon(new ImageIcon("C:\\Users\\ChAuV\\eclipse-workspace\\Tutorial_Tetris_Java\\gifs\\gameover.gif"));
+		lblNewLabel.setIcon(new ImageIcon("C:\\Users\\ChAuV\\eclipse-workspace\\Tetris\\gifs\\gameover.gif"));
 		lblNewLabel.setBackground(new Color(255, 255, 255));
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 	}

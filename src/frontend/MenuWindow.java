@@ -26,45 +26,45 @@ import javax.sound.sampled.Clip;
 
 import controller.WindowController;
 
-public class soundReproducer
-{
-	 private Clip clip;
-	 
-	 public void loadSound(String route)
-	 {
-		 try{
-			 File fileSound = new File(route);
-			 AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(fileSound);
-			 clip = AudioSystem.getClip();
-			 clip.open(audioInputStream);
-		 }catch(Exception e)
-		 {
-			 e.printStackTrace();
-		 }
-	 }
-	 
-	 public void reproduce()
-	 {
-		 if(clip != null)
-		 {
-			 clip.setFramePosition(0);
-			 clip.start();
-		 }
-	 }
-	 
-	 public void stop()
-	 {
-		 if(clip != null && clip.isRunning())
-			 clip.stop();
-	 }    
-}
+//public class soundReproducer
+//{
+//	 private Clip clip;
+//	 
+//	 public void loadSound(String route)
+//	 {
+//		 try{
+//			 File fileSound = new File(route);
+//			 AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(fileSound);
+//			 clip = AudioSystem.getClip();
+//			 clip.open(audioInputStream);
+//		 }catch(Exception e)
+//		 {
+//			 e.printStackTrace();
+//		 }
+//	 }
+//	 
+//	 public void reproduce()
+//	 {
+//		 if(clip != null)
+//		 {
+//			 clip.setFramePosition(0);
+//			 clip.start();
+//		 }
+//	 }
+//	 
+//	 public void stop()
+//	 {
+//		 if(clip != null && clip.isRunning())
+//			 clip.stop();
+//	 }    
+//}
 
 public class MenuWindow extends JFrame
 {
     private static final long serialVersionUID = 1L;
     private JFrame frame;
     private boolean soundOn = false;
-    private static soundReproducer reproducer;
+//    private static soundReproducer reproducer;
 
     public static void main(String[] args)
     {
@@ -97,7 +97,7 @@ public class MenuWindow extends JFrame
         
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         
-        reproducer = new soundReproducer();
+//       reproducer = new soundReproducer();
         
         JPanel panel2 = new JPanel();
         panel2.setBounds(0, 0, 484, 461);
@@ -150,32 +150,32 @@ public class MenuWindow extends JFrame
         		if(!soundOn)
         		{
         			AudioClip Sound;
-        			Sound = java.applet.Applet.newAudioClip(getClass().getResource("//data//soundtrack.wav"));
+        			Sound = java.applet.Applet.newAudioClip(getClass().getResource("//music//soundtrack.wav"));
         			Sound.play();
         			soundOn = true;
         		}
         	}
         });
-        btnNewButton.setIcon(new ImageIcon("C:\\Users\\ChAuV\\eclipse-workspace\\Tutorial_Tetris_Java\\data\\music.png"));
+        btnNewButton.setIcon(new ImageIcon("C:\\Users\\ChAuV\\eclipse-workspace\\Tetris\\data\\music.png"));
         panel2.add(btnNewButton);
 
         //------------------GIF TETRIS DOWN--------------------
         JLabel lblGifDown = new JLabel("");
-        lblGifDown.setIcon(new ImageIcon("C:\\Users\\ChAuV\\eclipse-workspace\\Tutorial_Tetris_Java\\gifs\\gifTetrisDown.gif"));
+        lblGifDown.setIcon(new ImageIcon("C:\\Users\\ChAuV\\eclipse-workspace\\Tetris\\gifs\\gifTetrisDown.gif"));
         lblGifDown.setHorizontalAlignment(SwingConstants.CENTER);
         lblGifDown.setBounds(10, 11, 124, 437);
         panel2.add(lblGifDown);
 
         //------------------GIF TETRIS UP--------------------
         JLabel lblGifUp = new JLabel("");
-        lblGifUp.setIcon(new ImageIcon("C:\\Users\\ChAuV\\eclipse-workspace\\Tutorial_Tetris_Java\\gifs\\gifTetrisUp.gif"));
+        lblGifUp.setIcon(new ImageIcon("C:\\Users\\ChAuV\\eclipse-workspace\\Tetris\\gifs\\gifTetrisUp.gif"));
         lblGifUp.setHorizontalAlignment(SwingConstants.CENTER);
         lblGifUp.setBounds(338, 11, 136, 437);
         panel2.add(lblGifUp);
    
         //------------------BACKGROUND PIC--------------------
         JLabel lblBoardBackground = new JLabel("");
-        lblBoardBackground.setIcon(new ImageIcon("C:\\Users\\ChAuV\\eclipse-workspace\\Tutorial_Tetris_Java\\data\\tetrisBoardClean.png"));
+        lblBoardBackground.setIcon(new ImageIcon("C:\\Users\\ChAuV\\eclipse-workspace\\Tetris\\data\\tetrisBoardClean.png"));
         lblBoardBackground.setHorizontalAlignment(SwingConstants.CENTER);
         lblBoardBackground.setBounds(0, 0, 484, 461);
         panel2.add(lblBoardBackground);
