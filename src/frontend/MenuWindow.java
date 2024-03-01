@@ -16,55 +16,14 @@ import javax.swing.JLabel;
 import javax.swing.ImageIcon;
 import javax.swing.SwingConstants;
 
-import java.applet.AudioClip;
-
-import java.io.File;
-
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-
 import controller.WindowController;
-
-//public class soundReproducer
-//{
-//	 private Clip clip;
-//	 
-//	 public void loadSound(String route)
-//	 {
-//		 try{
-//			 File fileSound = new File(route);
-//			 AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(fileSound);
-//			 clip = AudioSystem.getClip();
-//			 clip.open(audioInputStream);
-//		 }catch(Exception e)
-//		 {
-//			 e.printStackTrace();
-//		 }
-//	 }
-//	 
-//	 public void reproduce()
-//	 {
-//		 if(clip != null)
-//		 {
-//			 clip.setFramePosition(0);
-//			 clip.start();
-//		 }
-//	 }
-//	 
-//	 public void stop()
-//	 {
-//		 if(clip != null && clip.isRunning())
-//			 clip.stop();
-//	 }    
-//}
+import tetris.Reproducer;
 
 public class MenuWindow extends JFrame
 {
     private static final long serialVersionUID = 1L;
     private JFrame frame;
-    private boolean soundOn = false;
-//    private static soundReproducer reproducer;
+    private static Reproducer reproducer;
 
     public static void main(String[] args)
     {
@@ -97,7 +56,7 @@ public class MenuWindow extends JFrame
         
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         
-//       reproducer = new soundReproducer();
+        reproducer = new Reproducer();
         
         JPanel panel2 = new JPanel();
         panel2.setBounds(0, 0, 484, 461);
@@ -121,7 +80,8 @@ public class MenuWindow extends JFrame
         btnStart.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e)
         	{
-        		WindowController.StartGameWindow();
+        			reproducer.stop();
+        			WindowController.StartGameWindow();
         	}
         });
         btnStart.setFont(new Font("Segoe Print", Font.PLAIN, 25));
@@ -139,7 +99,7 @@ public class MenuWindow extends JFrame
             }
         });
         panel2.add(btnRecordsButton);
-        
+  
         //------------------SOUND BUTTON--------------------
         JButton btnNewButton = new JButton("");
         btnNewButton.setBounds(206, 368, 71, 80);
@@ -147,18 +107,21 @@ public class MenuWindow extends JFrame
         	@Override
         	public void mouseClicked(MouseEvent e)
         	{	
-        		if(!soundOn)
+        		if(reproducer.getPlay())
+        			reproducer.stop();
+
+        		else if( !(reproducer.getPlay()))
         		{
-        			AudioClip Sound;
-        			Sound = java.applet.Applet.newAudioClip(getClass().getResource("//music//soundtrack.wav"));
-        			Sound.play();
-        			soundOn = true;
+        			reproducer.loadSound("C:\\Users\\ChAuV\\eclipse-workspace\\Tetris\\music\\soundtrack.wav");
+        			reproducer.reproduce();
         		}
         	}
         });
         btnNewButton.setIcon(new ImageIcon("C:\\Users\\ChAuV\\eclipse-workspace\\Tetris\\data\\music.png"));
         panel2.add(btnNewButton);
 
+
+        
         //------------------GIF TETRIS DOWN--------------------
         JLabel lblGifDown = new JLabel("");
         lblGifDown.setIcon(new ImageIcon("C:\\Users\\ChAuV\\eclipse-workspace\\Tetris\\gifs\\gifTetrisDown.gif"));

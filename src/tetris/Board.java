@@ -1,6 +1,5 @@
 package tetris;
 
-import java.applet.AudioClip;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -9,28 +8,29 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 
-import javax.swing.JTextField;
 import javax.swing.JPanel;
 import javax.swing.Timer;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JLabel;
 
 import java.util.Random;
 
 import controller.WindowController;
-import javax.swing.JLabel;
 
 public class Board extends JPanel implements KeyListener, MouseListener, MouseMotionListener
 {
     private static final long serialVersionUID = 1L;
 
     // icons png
-    private BufferedImage pause, refresh, music;
+    private BufferedImage pause, refresh, music2;
     private Rectangle stopBounds, refreshBounds, musicBounds;
-    private boolean musicOn = true;
 
 	// board dimensions (the playing area)
     private final int boardHeight = 20, boardWidth = 10;
@@ -66,6 +66,7 @@ public class Board extends JPanel implements KeyListener, MouseListener, MouseMo
 
     private boolean gamePaused = false;
     private static boolean gameOver = false;
+    private static boolean gameMusic = true;
 
     private Random random = new Random();
 
@@ -85,23 +86,25 @@ public class Board extends JPanel implements KeyListener, MouseListener, MouseMo
     private JLabel lblDifficultUltraFast = new JLabel();
     private JLabel lblDifficultMegaFast = new JLabel();
     private JLabel lblDifficultInsane = new JLabel();
-    
 
 	// score
     private static int score = 0;
 
+    private static Reproducer reproducer;
+    
     public Board()
     {
         pause = ImageLoader.loadImage("/pause.png");
         refresh = ImageLoader.loadImage("/refresh.png");
-        music = ImageLoader.loadImage("/music.png");
+        music2 = ImageLoader.loadImage("/music2.png");
 
         mouseX = 0;
         mouseY = 0;
 
+        reproducer = new Reproducer();
         stopBounds = new Rectangle(350, 500, pause.getWidth(), pause.getHeight() + pause.getHeight() / 2);
         refreshBounds = new Rectangle(350, 500 - refresh.getHeight() - 20, refresh.getWidth(), refresh.getHeight() + refresh.getHeight() / 2);
-        musicBounds = new Rectangle(350, 500, pause.getWidth(), pause.getHeight() + pause.getHeight() / 2);
+        musicBounds = new Rectangle(350, 500 - refresh.getHeight() - 85, refresh.getWidth(), music2.getHeight() + music2.getHeight() / 2);
 
 		// create game looper
         looper = new Timer(delay, new GameLooper());
@@ -162,26 +165,38 @@ public class Board extends JPanel implements KeyListener, MouseListener, MouseMo
         {
             buttonLapse.start();
             gamePaused = !gamePaused;
+            reproducer.reproduce();
         }
 
         if (refreshBounds.contains(mouseX, mouseY) && leftClick)
             startGame();
+        
+        if (musicBounds.contains(mouseX, mouseY) && leftClick)
+        {
+    		if(reproducer.getPlay())
+    		{
+    			reproducer.stop();
+    			gameMusic = false;
+    		}
 
-        if(musicBounds.contains(mouseX, mouseY) && leftClick && musicOn)
-        	stopMusic();
-        	
+    		else if( !(reproducer.getPlay()))
+    		{
+    			reproducer.loadSound("C:\\Users\\ChAuV\\eclipse-workspace\\Tetris\\music\\soundtrack.wav");
+    			reproducer.reproduce();
+    			gameMusic = true;
+    		}
+        }
+      
         if (gamePaused || gameOver)
-            return;
+        {
+        	reproducer.stop();
+        	return;
+        }
         
         setDifficultMode();
         	
         currentShape.update();
     }
-
-    private void stopMusic()
-    {
-    	musicOn = false;
-	}
 
 	// select difficult to show
     private void setDifficultMode()
@@ -262,20 +277,31 @@ public class Board extends JPanel implements KeyListener, MouseListener, MouseMo
         }
         currentShape.render(g);
 
+        //icon pause
         if (stopBounds.contains(mouseX, mouseY))
             g.drawImage(pause.getScaledInstance(pause.getWidth() + 3, pause.getHeight() + 3, BufferedImage.SCALE_DEFAULT), stopBounds.x + 3, stopBounds.y + 3, null);
         
         else
             g.drawImage(pause, stopBounds.x, stopBounds.y, null);
 
+        //icon refresh
         if (refreshBounds.contains(mouseX, mouseY))
             g.drawImage(refresh.getScaledInstance(refresh.getWidth() + 3, refresh.getHeight() + 3, BufferedImage.SCALE_DEFAULT), refreshBounds.x + 3, refreshBounds.y + 3, null);
         
         else
             g.drawImage(refresh, refreshBounds.x, refreshBounds.y, null);
+        
+        //icon music
+        if (musicBounds.contains(mouseX, mouseY))
+            g.drawImage(music2.getScaledInstance(music2.getWidth() + 3, music2.getHeight() + 3, BufferedImage.SCALE_DEFAULT), musicBounds.x + 3, musicBounds.y + 3, null);
+        
+        else
+            g.drawImage(music2, musicBounds.x, musicBounds.y, null);
+
 
         if (gamePaused)
         {
+        	gameMusic = false;
             String gamePausedString = "GAME PAUSED";
             g.setColor(Color.WHITE);
             g.setFont(new Font("Georgia", Font.BOLD, 30));
@@ -283,7 +309,10 @@ public class Board extends JPanel implements KeyListener, MouseListener, MouseMo
         }
 
         if (gameOver)
+        {
+        	reproducer.stop();
         	WindowController.FinishedGameWindow();
+        }
 
         g.setColor(Color.WHITE);
         g.setFont(new Font("Georgia", Font.BOLD, 20));
