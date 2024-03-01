@@ -14,7 +14,6 @@ import javax.swing.SwingConstants;
 import javax.swing.JButton;
 import javax.swing.ImageIcon;
 
-
 import controller.WindowController;
 
 public class FinishedGameWindow extends JFrame
